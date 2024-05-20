@@ -1,0 +1,64 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${pageTitle }</title>
+<link rel="stylesheet" href="/resource/common.css" />
+<script src="/resource/common.js" defer="defer"></script>
+<!-- 테일윈드 불러오기 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+
+<!-- daisy ui 불러오기 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.6.1/full.css" />
+
+<!-- 폰트어썸 불러오기 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<!-- 제이쿼리 불러오기 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <!-- 질문 선택 -->
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; margin-top: 20px;">
+            <select id="question-select"  style="font-size: 1.2rem; padding: 8px;">
+                <option value="">질문을 선택해주세요</option>
+                <option value="오늘 대전 날씨 어때?">오늘 대전 날씨 어때?</option>
+                <option value="대전 추천 관광명소 추천해줘">대전 추천 관광명소 추천해줘</option>
+                <option value="대전 맛집 추천해줘">대전 맛집 추천해줘</option>
+            </select>
+            <button id="search-button" style="margin-left: 10px;">검색</button>
+        </div>
+
+        <!-- 검색 결과를 보여줄 곳 -->
+        <div id="faq-answer" style="text-align: center; font-size: 25px; font-weight: 700; color: red;"></div>
+
+        <!-- 자바스크립트 코드 -->
+        <script>
+            // 검색 버튼에 클릭 이벤트를 추가
+            document.getElementById('search-button').addEventListener('click', function() {
+                const selectedQuestion = document.getElementById('question-select').value;
+                if (selectedQuestion) {
+                    // 선택된 질문에 대한 답변을 가져오기 위해 서버에 요청을 보냄
+                    $.ajax({
+                        url: '/usr/common/head?question=' + selectedQuestion,
+                        method: 'GET',
+                        success: function(response) {
+                            // 서버에서 받은 답변을 화면에 출력
+                            document.getElementById('faq-answer').innerText = response;
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                } else {
+                    document.getElementById('faq-answer').innerText = ''; // 선택이 초기화된 경우 결과 초기화
+                }
+            });
+        </script>
+    </header>
+    <h1 style="font-size: 2rem;">${pageTitle }</h1>
+    <hr />
+</body>
+</html>
